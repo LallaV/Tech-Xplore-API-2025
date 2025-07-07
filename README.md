@@ -17,6 +17,32 @@ The API includes comprehensive Swagger/OpenAPI documentation:
 - **OpenAPI Spec**: Available at `/doc` for programmatic access
 - **Interactive Testing**: Test all endpoints directly from the Swagger UI
 
+### Accessing the Swagger UI
+
+To access the interactive Swagger documentation, you need to append `/ui` to your base URL:
+
+#### Local Development
+```
+http://localhost:8787/ui
+```
+
+#### Production (After Deployment)
+```
+https://your-actual-worker-url.workers.dev/ui
+```
+
+**Examples:**
+- If your deployed Worker URL is `https://tech-xplore-api.my-subdomain.workers.dev`, then access Swagger at:
+  ```
+  https://tech-xplore-api.my-subdomain.workers.dev/ui
+  ```
+- For local development, always use:
+  ```
+  http://localhost:8787/ui
+  ```
+
+**Note**: Make sure your Worker is running (locally with `npm run dev` or deployed) before trying to access the Swagger UI.
+
 ### Documentation Features
 
 - **Comprehensive Schemas**: All request/response structures are fully documented
@@ -29,6 +55,29 @@ The API includes comprehensive Swagger/OpenAPI documentation:
 ```txt
 npm run deploy
 ```
+
+### Post-Deployment Configuration
+
+After successfully deploying your Worker, you need to update the production server URL in your OpenAPI configuration:
+
+1. **Find your deployed Worker URL**: After deployment, Cloudflare will provide you with a URL like `https://your-project-name.your-subdomain.workers.dev`
+
+2. **Update the production server URL** in `src/index.ts`:
+   ```ts
+   servers: [
+     {
+       url: 'https://your-actual-worker-url.workers.dev', // Replace with your deployed URL
+       description: 'Production server',
+     },
+     // ... other servers
+   ],
+   ```
+
+3. **Why this is important**: 
+   - The Swagger UI uses this URL to make actual API calls when users test endpoints
+   - Without the correct URL, the "Try it out" functionality in `/ui` won't work
+   - External API clients and integrations will need the correct base URL for API calls
+   - This ensures your OpenAPI documentation accurately reflects your live API endpoints
 
 ## Type Generation
 
